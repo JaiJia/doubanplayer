@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+    <!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script> -->
+    <script src="utils.js"></script>
+    <script src="index.js"></script>
+    <title>Player</title>
+</head>
+
+<body>
+    <audio id="audioEle" src="http://www.jaijia.cn/utils/aud.mp3" autoplay="true" controls=""></audio>
+    <div class="wrap center-block" style="padding:50px 20px;width: 400px;background-color: #eee;border-radius: 10px;">
+        <div class="text-center">
+            <img src="album.jpg" alt="封面" class="album-pic img-circle" style="width: 130px;">
+        </div>
+        <h3 class="text-center">通关</h3>
+        <h4 class="text-center">AAB</h4>
+        <div class="collection" style="margin: 20px 50px;">
+            <div class="row">
+                <div class="col-sm-3 text-center"><a><span class="glyphicon glyphicon-heart"></span></a></div>
+                <div class="col-sm-3 text-center"><a><span class="glyphicon glyphicon-download-alt"></span></a></div>
+                <div class="col-sm-3 text-center"><a><span class="glyphicon glyphicon-comment"></span></a></div>
+                <div class="col-sm-3 text-center"><a><span class="glyphicon glyphicon-option-vertical"></span></a></div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-sm-4 col-sm-offset-2 text-center">
+                <span>00:00</span>/
+                <span class="totalTime">00:00</span>
+            </div>
+            <div class="col-sm-4">
+                <div class="volume-btn" style="position: absolute;left: -4px;top: 3px;">
+                    <span class="glyphicon glyphicon-volume-up show"></span>
+                    <span class="glyphicon glyphicon-volume-down hidden"></span>
+                    <span class="glyphicon glyphicon-volume-off hidden"></span>
+                </div>
+                <input type="range" class="volume" style="margin-top: 9px;">
+            </div>
+        </div>
+        <div style="position: relative;">
+            <div class="progress" style="height: 4px;
+                                        background-color:#fff;
+                                        padding:0;
+                                        margin-left: 50px;
+                                        margin-right: 50px;">
+                <span class="process-point"></span>
+                <div class="progress-bar" style="width: 35%;background-color:#7b7b7b;">
+                    <span class="sr-only">35% Complete (success)</span>
+                </div>
+                <div class="progress-bar" style="width: 20%;background-color:#d4d4d4;">
+                    <span class="sr-only">20% Complete (warning)</span>
+                </div>
+            </div>
+        </div>
+        <div class="klick">
+            <div class="row">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-2">
+                    <span class="glyphicon glyphicon-random show"></span>
+                    <span class="glyphicon glyphicon-repeat hidden"></span>
+                    <span class="glyphicon glyphicon-refresh hidden"></span>
+                </div>
+                <div class="col-sm-2"><span class="glyphicon glyphicon-step-backward"></span></div>
+                <div class="col-sm-2 play-btn">
+                    <span class="glyphicon glyphicon-play hidden"></span>
+                    <span class="glyphicon glyphicon-pause show"></span>
+                </div>
+                <div class="col-sm-2"><span class="glyphicon glyphicon-step-forward"></span></div>
+                <div class="col-sm-2"><span class="glyphicon glyphicon-list"></span></div>
+                <div class="col-sm-1"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
