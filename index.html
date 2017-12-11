@@ -14,7 +14,7 @@
 
 <body>
     <audio id="audioEle" src="http://www.jaijia.cn/utils/aud.mp3" autoplay="true" controls=""></audio>
-    <div class="wrap center-block" style="padding:50px 20px;width: 400px;background-color: #eee;border-radius: 10px;">
+    <div class="wrap center-block" style="padding:50px 20px;width: 400px;height: 500px;border-radius: 10px;background-color: #eee;">
         <div class="text-center">
             <img src="album.jpg" alt="封面" class="album-pic img-circle" style="width: 130px;">
         </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="row" style="margin-bottom: 15px;">
             <div class="col-sm-4 col-sm-offset-2 text-center">
-                <span>00:00</span>/
+                <span class="finTime">00:00</span>/
                 <span class="totalTime">00:00</span>
             </div>
             <div class="col-sm-4">
@@ -39,7 +39,7 @@
                     <span class="glyphicon glyphicon-volume-down hidden"></span>
                     <span class="glyphicon glyphicon-volume-off hidden"></span>
                 </div>
-                <input type="range" class="volume" style="margin-top: 9px;">
+                <input type="range" class="volume" style="margin-top: 9px;" value="100">
             </div>
         </div>
         <div style="position: relative;">
@@ -47,13 +47,12 @@
                                         background-color:#fff;
                                         padding:0;
                                         margin-left: 50px;
-                                        margin-right: 50px;">
-                <span class="process-point"></span>
-                <div class="progress-bar" style="width: 35%;background-color:#7b7b7b;">
-                    <span class="sr-only">35% Complete (success)</span>
+                                        margin-right: 50px;
+                                        width: 250px;">
+                <span class="process-point" style="cursor: pointer;"></span>
+                <div class="progress-bar process-finish" style="transition: none;background-color:#7b7b7b;">
                 </div>
-                <div class="progress-bar" style="width: 20%;background-color:#d4d4d4;">
-                    <span class="sr-only">20% Complete (warning)</span>
+                <div class="progress-bar process-buffer" style="transition: none;width: 20%;background-color:#d4d4d4;">
                 </div>
             </div>
         </div>

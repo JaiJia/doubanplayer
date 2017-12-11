@@ -29,7 +29,7 @@
     /*这三个是去掉那条线原有的默认样式，划重点！！*/
     width: 30%;
     height: 0.3rem;
-    background: #bdbdbd;
+    background: #ffbdc9;
     /*这三个是设置滑块下面那条线的样式*/
 }
 
