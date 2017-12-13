@@ -24,7 +24,7 @@ window.onload = function() {
     function move(e) {
         if (dragging && e.target) {
             $("#audioEle").currentTime = (e.pageX - 665) / 250 * Math.ceil($("#audioEle").duration);
-            $(".process-point")[0].style.marginLeft = e.pageX - 665 + "px";
+            $(".process-point")[0].style.marginLeft = e.pageX >= 665 ? e.pageX - 665 : 0 + "px";
             console.log($("#audioEle").currentTime);
         }
     }
@@ -69,20 +69,56 @@ window.onload = function() {
     };
     // 改变音量
     $(".volume")[0].onchange = function() {
-        console.log(this.value);
         $("#audioEle").volume = this.value / 100;
-        console.log($("#audioEle").volume);
     };
+    $.on($("#audioEle"), "volumechange", function() {
+        $(".volume")[0].value = this.volume * 100;
+    });
     $(".volume-btn")[0].addEventListener("click", function(e) {
-        removeClass(e.target, "show");
-        addClass(e.target, "hidden");
-        if (e.target.nextSibling.nextSibling) {
-            removeClass(e.target.nextSibling.nextSibling, "hidden");
-            addClass(e.target.nextSibling.nextSibling, "show");
-        } else {
-            removeClass(e.target.parentNode.firstChild.nextSibling, "hidden");
-            addClass(e.target.parentNode.firstChild.nextSibling, "show");
+        if (hasClass(e.target, "glyphicon-volume-up")) {
+            removeClass(e.target, "show");
+            addClass(e.target, "hidden");
+            removeClass($(".glyphicon-volume-down")[0], "hidden");
+            addClass($(".glyphicon-volume-down")[0], "show");
+            $("#audioEle").volume = 0.3;
+        }
+        if (hasClass(e.target, "glyphicon-volume-down")) {
+            removeClass(e.target, "show");
+            addClass(e.target, "hidden");
+            removeClass($(".glyphicon-volume-off")[0], "hidden");
+            addClass($(".glyphicon-volume-off")[0], "show");
+            $("#audioEle").volume = 0;
+        }
+        if (hasClass(e.target, "glyphicon-volume-off")) {
+            removeClass(e.target, "show");
+            addClass(e.target, "hidden");
+            removeClass($(".glyphicon-volume-up")[0], "hidden");
+            addClass($(".glyphicon-volume-up")[0], "show");
+            $("#audioEle").volume = 1;
         }
     });
-
+    // 播放列表
+    var playList = [{
+        srcUrl: "许嵩 - 蝴蝶的时间.mp3",
+        albumPic: ""
+    }, {
+        srcUrl: "许嵩 - 千古.mp3",
+        albumPic: ""
+    }, {
+        srcUrl: "许嵩 - 摄影艺术.mp3",
+        albumPic: ""
+    }, {
+        srcUrl: "许嵩 - 全球变冷.mp3",
+        albumPic: ""
+    }, {
+        srcUrl: "许嵩 - 违章动物.mp3",
+        albumPic: ""
+    }];
+    $.on($("#audioEle"), "ended", function() {
+        var ind = Math.floor(Math.random()* 5);
+        this.src = "music/" + playList[ind].srcUrl;
+        $(".album-pic")[0].src = "pic/" + playList[ind].albumPic;
+        $(".songName")[0].innerText = playList[ind].srcUrl.split(".")[0].split(" ")[2];
+        $(".singerName")[0].innerText = playList[ind].srcUrl.split(".")[0].split(" ")[0];
+    });
 };
