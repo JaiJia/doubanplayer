@@ -98,7 +98,7 @@ window.onload = function() {
         }
     });
     // 播放列表
-    var playList = [{
+    audioObj.playList = [{
         srcUrl: "许嵩 - 蝴蝶的时间.mp3",
         albumPic: ""
     }, {
@@ -114,11 +114,42 @@ window.onload = function() {
         srcUrl: "许嵩 - 违章动物.mp3",
         albumPic: ""
     }];
+    //选择播放模式
+    $.on($(".playStyle")[0], "click", function() {
+        if (hasClass(e.target, "glyphicon-random")) {
+            removeClass(e.target, "show");
+            addClass(e.target, "hidden");
+            removeClass($(".glyphicon-repeat")[0], "hidden");
+            addClass($(".glyphicon-repeat")[0], "show");
+            audioObj.playStyle = "repeat";
+            changeStyle();
+        }
+        if (hasClass(e.target, "glyphicon-repeat")) {
+            removeClass(e.target, "show");
+            addClass(e.target, "hidden");
+            removeClass($(".glyphicon-refresh")[0], "hidden");
+            addClass($(".glyphicon-refresh")[0], "show");
+            audioObj.playStyle = "refresh";
+        }
+        if (hasClass(e.target, "glyphicon-refresh")) {
+            removeClass(e.target, "show");
+            addClass(e.target, "hidden");
+            removeClass($(".glyphicon-random")[0], "hidden");
+            addClass($(".glyphicon-random")[0], "show");
+            audioObj.playStyle = "random";
+        }
+        changeStyle(audioObj.playStyle);
+    });
     $.on($("#audioEle"), "ended", function() {
         var ind = Math.floor(Math.random()* 5);
-        this.src = "music/" + playList[ind].srcUrl;
-        $(".album-pic")[0].src = "pic/" + playList[ind].albumPic;
-        $(".songName")[0].innerText = playList[ind].srcUrl.split(".")[0].split(" ")[2];
-        $(".singerName")[0].innerText = playList[ind].srcUrl.split(".")[0].split(" ")[0];
+        this.src = "music/" + audioObj.playList[ind].srcUrl;
+        $(".album-pic")[0].src = "pic/" + audioObj.playList[ind].albumPic;
+        $(".songName")[0].innerText = audioObj.playList[ind].srcUrl.split(".")[0].split(" ")[2];
+        $(".singerName")[0].innerText = audioObj.playList[ind].srcUrl.split(".")[0].split(" ")[0];
     });
+    function changleStyle(playStyle) {
+        switch(playStyle) {
+            case "random": {}
+        }
+    }
 };
