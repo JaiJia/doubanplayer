@@ -23,10 +23,9 @@ window.onload = function() {
     }
 
     function move(e) {
-        if (dragging && e.target) {
+        if (dragging) {
             $("#audioEle").currentTime = (e.pageX - 665) / 250 * Math.ceil($("#audioEle").duration);
             $(".process-point")[0].style.marginLeft = e.pageX >= 665 ? e.pageX - 665 : 0 + "px";
-            console.log($("#audioEle").currentTime);
         }
     }
 
@@ -34,6 +33,7 @@ window.onload = function() {
         if (dragging === true) {
             $(".play-btn")[0].click();
         }
+        $("#audioEle").play();
         dragging = false;
     }
     $.on($(".progress")[0], "mousedown", down);
@@ -45,10 +45,10 @@ window.onload = function() {
         var timeRatio = $("#audioEle").currentTime / $("#audioEle").duration;
         $(".process-point")[0].style.marginLeft = timeRatio * 250 + "px";
         $(".process-finish")[0].style.width = timeRatio * 250 + "px";
-        if ($("#audioEle").buffered.end(0) !== $("#audioEle").duration) {
+        // if ($("#audioEle").buffered.end(0) !== $("#audioEle").duration) {
             $(".process-buffer")[0].style.width = $("#audioEle").buffered.end(0) /
                 $("#audioEle").duration * 250 - timeRatio * 250 + "px";
-        } else {$(".process-buffer")[0].style.width = 250 + "px";}
+        // } else {$(".process-buffer")[0].style.width = 250 + "px";}
     }, 1000);
     // 点击暂停继续
     $(".album-pic")[0].onclick = isPlay;
@@ -177,7 +177,12 @@ window.onload = function() {
     }
 
     function changeSong(direction) {
-        var ind = direction === "next" ? audioObj.nextInd : audioObj.preInd;
+        var ind = 0;
+        if(direction === "next") {
+            ind = audioObj.nextInd;
+        } else if (direction === "pre") {
+            ind = audioObj.preInd;
+        }
         $("#audioEle").src = "music/" + audioObj.playList[ind].srcUrl;
         $(".album-pic")[0].src = "pic/" + audioObj.playList[ind].albumPic;
         $(".songName")[0].innerText = audioObj.playList[ind].srcUrl.split(".")[0].split(" ")[2];
@@ -186,6 +191,6 @@ window.onload = function() {
     }
     (function init() {
         changeSongInd();
-        $("#audioEle").durationchange();
+        changeSong(0);
     })();
 };
