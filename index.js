@@ -1,17 +1,18 @@
 window.onload = function() {
-    var audioObj = {};
+    var audioObj = {
+        playStyle: "random"
+    };
     var dragging;
     // 获取时长信息
     $.on($("#audioEle"), "durationchange", function() {
         var min = Math.floor(+this.duration / 60);
-        var sec = Math.round(+this.duration % 60);
+        var sec = Math.floor(+this.duration % 60) >= 10 ? Math.floor(+this.duration % 60) : "0" + Math.floor(+this.duration % 60);
         var timeStr = "0" + min + ":" + sec;
         $(".totalTime")[0].innerText = timeStr;
     });
     $.on($("#audioEle"), "timeupdate", function() {
         var min = Math.floor(+this.currentTime / 60);
-        var sec = Math.round(+this.currentTime % 60) >= 10 ? Math.round(+this.currentTime % 60) : "0" +
-            Math.round(+this.currentTime % 60);
+        var sec = Math.floor(+this.currentTime % 60) >= 10 ? Math.floor(+this.currentTime % 60) : "0" + Math.floor(+this.currentTime % 60);
         var timeStr = "0" + min + ":" + sec;
         $(".finTime")[0].innerText = timeStr;
     });
@@ -44,11 +45,16 @@ window.onload = function() {
         var timeRatio = $("#audioEle").currentTime / $("#audioEle").duration;
         $(".process-point")[0].style.marginLeft = timeRatio * 250 + "px";
         $(".process-finish")[0].style.width = timeRatio * 250 + "px";
-        $(".process-buffer")[0].style.width = $("#audioEle").buffered.end(0) /
-            $("#audioEle").duration * 250 - timeRatio * 250 + "px";
+        if ($("#audioEle").buffered.end(0) !== $("#audioEle").duration) {
+            $(".process-buffer")[0].style.width = $("#audioEle").buffered.end(0) /
+                $("#audioEle").duration * 250 - timeRatio * 250 + "px";
+        } else {$(".process-buffer")[0].style.width = 250 + "px";}
     }, 1000);
     // 点击暂停继续
-    $(".play-btn")[0].onclick = function isPlay(e) {
+    $(".album-pic")[0].onclick = isPlay;
+    $(".play-btn")[0].onclick = isPlay;
+
+    function isPlay(e) {
         if (hasClass($(".glyphicon-play")[0], "show")) {
             removeClass($(".glyphicon-play")[0], "show");
             addClass($(".glyphicon-play")[0], "hidden");
@@ -66,7 +72,7 @@ window.onload = function() {
             $("#audioEle").pause();
             $(".album-pic")[0].style.animationPlayState = "paused";
         }
-    };
+    }
     // 改变音量
     $(".volume")[0].onchange = function() {
         $("#audioEle").volume = this.value / 100;
@@ -100,29 +106,28 @@ window.onload = function() {
     // 播放列表
     audioObj.playList = [{
         srcUrl: "许嵩 - 蝴蝶的时间.mp3",
-        albumPic: ""
-    }, {
-        srcUrl: "许嵩 - 千古.mp3",
-        albumPic: ""
-    }, {
-        srcUrl: "许嵩 - 摄影艺术.mp3",
-        albumPic: ""
-    }, {
-        srcUrl: "许嵩 - 全球变冷.mp3",
-        albumPic: ""
+        albumPic: "butterfly.jpg"
     }, {
         srcUrl: "许嵩 - 违章动物.mp3",
-        albumPic: ""
+        albumPic: "over.jpg"
+    }, {
+        srcUrl: "许嵩 - 千古.mp3",
+        albumPic: "eveningpaper.jpg"
+    }, {
+        srcUrl: "许嵩 - 全球变冷.mp3",
+        albumPic: "over.jpg"
+    }, {
+        srcUrl: "许嵩 - 摄影艺术.mp3",
+        albumPic: "eveningpaper.jpg"
     }];
     //选择播放模式
-    $.on($(".playStyle")[0], "click", function() {
+    $.on($(".playStyle")[0], "click", function(e) {
         if (hasClass(e.target, "glyphicon-random")) {
             removeClass(e.target, "show");
             addClass(e.target, "hidden");
             removeClass($(".glyphicon-repeat")[0], "hidden");
             addClass($(".glyphicon-repeat")[0], "show");
             audioObj.playStyle = "repeat";
-            changeStyle();
         }
         if (hasClass(e.target, "glyphicon-repeat")) {
             removeClass(e.target, "show");
@@ -138,18 +143,49 @@ window.onload = function() {
             addClass($(".glyphicon-random")[0], "show");
             audioObj.playStyle = "random";
         }
-        changeStyle(audioObj.playStyle);
+        changeSongInd();
     });
-    $.on($("#audioEle"), "ended", function() {
-        var ind = Math.floor(Math.random()* 5);
-        this.src = "music/" + audioObj.playList[ind].srcUrl;
+    $.on($("#audioEle"), "ended", function() { changeSong("next"); });
+    $.on($(".glyphicon-step-backward")[0], "click", function() { changeSong("pre"); });
+    $.on($(".glyphicon-step-forward")[0], "click", function() { changeSong("next"); });
+
+    function changeSongInd() {
+        var thisInd = audioObj.playList.findIndex((item) => {
+            return decodeURI($("#audioEle").src).indexOf(item.srcUrl) > -1;
+        });
+        switch (audioObj.playStyle) {
+            case "random":
+                {
+                    audioObj.nextInd = Math.floor(Math.random() * 5);
+                    audioObj.preInd = Math.floor(Math.random() * 5);
+                    break;
+                }
+            case "repeat":
+                {
+                    audioObj.nextInd = thisInd;
+                    audioObj.preInd = thisInd;
+                    break;
+                }
+            case "refresh":
+                {
+                    audioObj.nextInd = thisInd === audioObj.playList.length - 1 ? 0 : thisInd + 1;
+                    audioObj.preInd = thisInd === 0 ? audioObj.playList.length - 1 : thisInd - 1;
+                    break;
+                }
+                defalut: { break; }
+        }
+    }
+
+    function changeSong(direction) {
+        var ind = direction === "next" ? audioObj.nextInd : audioObj.preInd;
+        $("#audioEle").src = "music/" + audioObj.playList[ind].srcUrl;
         $(".album-pic")[0].src = "pic/" + audioObj.playList[ind].albumPic;
         $(".songName")[0].innerText = audioObj.playList[ind].srcUrl.split(".")[0].split(" ")[2];
         $(".singerName")[0].innerText = audioObj.playList[ind].srcUrl.split(".")[0].split(" ")[0];
-    });
-    function changleStyle(playStyle) {
-        switch(playStyle) {
-            case "random": {}
-        }
+        changeSongInd();
     }
+    (function init() {
+        changeSongInd();
+        $("#audioEle").durationchange();
+    })();
 };
