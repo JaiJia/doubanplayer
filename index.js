@@ -192,5 +192,6 @@ window.onload = function() {
     (function init() {
         changeSongInd();
         changeSong(0);
+        console.log(0);
     })();
 };
